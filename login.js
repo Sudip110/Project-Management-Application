@@ -57,7 +57,7 @@ const login = () => {
     window.location.href="index.html";
   }
   else
-  alert ('Invalid username or Pa');
+  alert ('Invalid username or Password');
 };
 
 signUp_top.addEventListener("click", (e) => {
