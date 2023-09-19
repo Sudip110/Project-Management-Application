@@ -15,7 +15,6 @@
 </head>
 <body>
    <div class="container">
-    
     <div class="sidebar_left">
        
         <div class="sidebar_left_content">
@@ -88,15 +87,55 @@
             </div>
         </div>
         <div id="menu">
-            <span class="material-symbols-outlined " id="collapse">
-                unfold_less
-            </span>
-            <span class="material-symbols-outlined" id="expand">
-                unfold_more
-            </span>
+            <i class='bx bx-collapse-horizontal' id="collapse"></i>
+            <i class='bx bx-expand-horizontal'id="expand"></i>
         </div>
        
     </div>
+
+    <div class="right_content">
+        <div class="top_bar_right">
+            <div class="search_bar">
+                <div class="search_box">
+                    <i class='bx bx-search'></i>
+                    <input type="text" class="search_bar_input" placeholder="Search your tasks here">
+                </div>
+
+            </div>
+            <div class="date">
+                <p>Date</p>
+                <p>Day</p>
+            </div>
+        </div>
+        
+        <div class="main_content_carousal">
+            <div class="main_content_center">
+                <div class="Projects_slider">
+                    <a class="prev" >&#10094;</a>
+                    <a class="next" >&#10095;</a>
+                    <i class='bx bx-plus-circle project_add'></i>
+                </div>
+                
+                   
+                    <div class="task_form">
+                        <input type="text" class="task" placeholder="Task 1">
+                        <input type="text" class="task" placeholder="Task 2">
+                        <input type="text" class="task" placeholder="Task 3">
+                        <input type="text" class="task" placeholder="Task 4">
+                        <input type="text" class="task" placeholder="Task 5">
+                        <input type="submit" class="task_submit" >
+                    </div>
+                <div class="all_tasks">
+                </div>
+                <div class="project_add_form">
+                    <input type="text" class="project_name" placeholder="Project Name">
+                    <button class="project_ok">OK</button>
+
+                </div>
+            </div>
+        </div>    
+    </div>
+    
    </div>
     <script src="script.js"></script>
 </body>
