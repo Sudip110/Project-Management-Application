@@ -328,6 +328,7 @@ body::-webkit-scrollbar {
 
     z-index: 1;
     margin-left:6rem;
+    margin-bottom: 0;
     padding: 0.2rem;
     /* background-color: #0096c7; */
     display: flex;
@@ -450,7 +451,7 @@ body::-webkit-scrollbar {
 .Projects_slider
 {
    
-
+     margin-top: 0;
     background-color: 	#FAF9F6;
     /* background-color: yellow; */
     /* position: relative; */
@@ -623,12 +624,25 @@ font-size: 2rem;
     
     margin-bottom: 0.5rem;
     cursor: pointer;
+    display: flex;
+    justify-content: left;
+    align-items: center;
   }
-  .task_list_element:hover
+  /* .task_list_element:hover
   {
     padding: 0.2rem;
     background-color: 	#FAF9F6;
     box-shadow: 2px 2px 5px #353935;
     border-radius: 0.5rem;
     
+  } */
+  .task_item_check_regular
+  {
+    /* color: #0096c7; */
+    cursor: pointer;
+  }
+  .task_item_check_solid
+  {
+    cursor: pointer;
+    color: #0096c7;
   }

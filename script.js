@@ -11,7 +11,8 @@ const projectSlider= document.querySelector(".Projects_slider");
 const prevButton = document.querySelector(".prev");
 const nextButton = document.querySelector(".next");
 const submitTask = document.querySelector(".task_submit");
-let projectCards=[], tasksArray =[];;
+//const taskContainer=document.querySelector(".all_tasks");
+let projects=[], tasksArray =[];;
 let prevIndex=0;
 let currentIndex = 0;  
 let currentProjectName="";
@@ -54,40 +55,79 @@ const toggle=()=>
     }
 }
 
-
-// ---------------------Fuction to create project card---------------------------------------
-const createProjectCard=(name,color)=>
-{
-    const customElement = document.createElement("div");
-    customElement.className = "project_card";
-    customElement.innerHTML = `
-        <span class="project_name_card">${name}</span>
-        <p>Progress</p>
-        <span class="project_progress">80</span>
-        <div class="progress_bar" style="background-color:aliceblue;">
-        <div id="bar" style="height:24px;width:1%;background-color: red;"></div>
-        </div>
-        <i class='bx bx-plus-circle task_add' id=${name}></i>
-        
-    `;
-    customElement.style.backgroundColor=color;
-    return customElement;
-}
-
 // to add tasks to projects
-    class projectTask 
+    class project
     {
-        constructor(projectName)
+        constructor(projectName,colorCode)
         {
             this.projectName=projectName;
+            this.colorCode=colorCode;
             this.tasks=[];
+            this.status=false;
+            this.projectCard=this.createProject(this.projectName,this.colorCode);
+            projectSlider.appendChild(this.projectCard);
         }
 
+        createProject(projectName,colorCode)
+        {
+            const customElement = document.createElement("div");
+            customElement.className = "project_card";
+            customElement.innerHTML = `
+                <span class="project_name">${projectName}</span>
+                <p>Progress</p>
+                <span class="project_progress">80</span>
+                <div class="progress_bar" style="background-color:aliceblue;">
+                <div id="bar" style="height:24px;width:1%;background-color: red;"></div>
+                </div>
+                <i class='bx bx-plus-circle task_add' id=${projectName}></i>
+                
+            `;
+            customElement.style.backgroundColor=colorCode;
+            return customElement;
+        }
+
+        addTaskToTaskContainer()
+        {
+            
+        }
+
+        
+
+    }
+
+    class taskElement
+    {
+        constructor(taskName,projectName)
+        {
+            this.taskName=taskName;
+            this.projectName=projectName;
+            this.task=this.createTask();
+            this.status="incomplete";
+
+            //creating the task element
+            this.createTask(this.taskName,this.projectName)
+        }
+        createTask(taskName, projectName)
+        {
+            const taskContainer = document.querySelector(".all_tasks")
+            const task = document.createElement("div");
+            task.classList.add("task_list_element");
+            const taskDescription = document.createElement("p");
+            taskDescription.textContent=this.taskName;
+            const taskTickIconRegular = document.createElement("i");
+            taskTickIconRegular.classList.add('bx','bx-check-circle', 'task_item_check_regular');
+            const taskTickIconSolid = document.createElement('i');
+            taskTickIconSolid.classList.add('bx','bxs-check-circle', 'task_item_check_solid');
+            task.appendChild(taskDescription);
+            task.appendChild(taskTickIconRegular);
+            task.appendChild(taskTickIconSolid);
+            taskContainer.appendChild(task);
+        }
     }
 
 
    projectSlider.addEventListener("click",(event)=>{
-        if (event.target.classList.contains('task_add') || event.target.classList.contains('project_card')) {
+        if (event.target.classList.contains('task_add') || event.target.classList.contains('project_project')) {
             let projectName;
             if(event.target.classList.contains('task_add'))
              {
@@ -104,7 +144,7 @@ const createProjectCard=(name,color)=>
                 tasksArray.forEach((task)=>{
                     if(task.projectName===projectName)
                     {
-                        updateTasks(task);
+                       // updateTasks(task);
                     }
                     console.log(tasksArray);
                })
@@ -118,22 +158,17 @@ submitTask.addEventListener("click",(event)=>
 {
     const taskForm = document.querySelector(".task_form");
     taskForm.style.display="none";
-    tasksArray.forEach((task)=>{
-        if(task.projectName===currentProjectName)
+    //tasksArray contains a list of all the objects of class ProjectTask
+    allTasks=taskForm.querySelectorAll(".task");
+    console.log(allTasks)
+    allTasks.forEach((task)=>{
+        if(task.value!=="")
         {
-            console.log("updating Array");
-            const allTasks = document.querySelectorAll(".task")
-            console.log(typeof(allTasks));
-            console.log(allTasks);
-            allTasks.forEach((task1)=>{
-                if(task1.value!=="")
-                task.tasks.push(task1.value);
-            })
-            updateTasks(task);
-            console.log(task.tasks);
-            // updateTasks(task);
+            console.log("creating a task object");
+            const task1 = new taskElement()
         }
     })
+    
 })
 // -------------------------------Incrementing progressbar functionality----------------------
 // const increment_progress_bar=()=>{
@@ -167,7 +202,7 @@ projectAddButton.addEventListener('click',(e)=>{
 
 projectOkButton.addEventListener('click',(e)=>{
     const name = document.querySelector(".project_name").value;
-    const ProjectCardColor =["#8F00FF","#4B0082","#13274F","#6F00FF","#FFA500","#353935"];
+    const ProjectprojectColor =["#8F00FF","#4B0082","#13274F","#6F00FF","#FFA500","#353935"];
     if(name.length===0 || !name.replace(/\s/g, '').length)
     {
         alert("Please Enter a Project Name");
@@ -175,25 +210,24 @@ projectOkButton.addEventListener('click',(e)=>{
     else
     {
         console.log('OK clicked'); 
-        let colorIndex = Math.floor(Math.random()*((ProjectCardColor.length-1) + 1) );
+        let colorIndex = Math.floor(Math.random()*((ProjectprojectColor.length-1) + 1) );
         // so that the same color is not repeated twice in a row
         if(prevIndex==colorIndex)
-            colorIndex = Math.floor(Math.random()*((ProjectCardColor.length-1) + 1) );
+            colorIndex = Math.floor(Math.random()*((ProjectprojectColor.length-1) + 1) );
         prevIndex=colorIndex
-        const ProjectCardcolor=ProjectCardColor[colorIndex];
-        const projectCard = createProjectCard(name,ProjectCardcolor);
-        projectCards.push(projectCard);
-        projectSlider.appendChild(projectCard);
-        // Hide elements except the first three
-        updateProjectSlides();    
+        const projectprojectColor=ProjectprojectColor[colorIndex];
+        const projectComp= new project(name,projectprojectColor);
+        projects.push(projectComp);
+        // Hide elements except the first three   
         projectAddForm.style.display='none';
         projectAddButton.style.display='block';
-        const task = new projectTask(name);
-        tasksArray.push(task);
-        console.log(tasksArray);
-        console.log(task.projectName);
+        updateProjectSlides(); 
+        // const task = new projectTask(name);
+        // tasksArray.push(task);
+        // console.log(tasksArray);
+        // console.log(task.projectName);
     }
-    // if(projectCards.length===1)
+    // if(projects.length===1)
     // {
     //     projectSlider.style.justifyContent="center";
     // }
@@ -205,20 +239,20 @@ projectOkButton.addEventListener('click',(e)=>{
 
 const updateProjectSlides=()=>
 {
-    const noOfCards=projectCards.length;
-    console.log(noOfCards);
-    if(noOfCards>3)
+    const noOfProjects=projects.length;
+    console.log(noOfProjects);
+    if(noOfProjects>3)
     {
-        projectCards.forEach((card)=>{
-            if(projectCards.indexOf(card)==(noOfCards-3)-1)
-                card.style.display="none";
+        projects.forEach((project)=>{
+            if(projects.indexOf(project)==(noOfProjects-3)-1)
+                project.projectCard.style.display="none";
             prevButton.style.display="block";
             nextButton.style.display="block";
         })
     }
     else
     {
-        projectCards.forEach(card=>card.style.display="block");
+        projects.forEach(project=>project.projectCard.style.display="block");
         prevButton.style.display="none";
         nextButton.style.display="none";
     }
@@ -229,20 +263,20 @@ const updateProjectSlides=()=>
 // Next button click event
 nextButton.addEventListener("click", () => {
     currentIndex++;
-    if (currentIndex >= projectCards.length) {
+    if (currentIndex >= projects.length) {
        currentIndex = 0;
     }
   
     // Show the next 3 elements
-    projectCards.forEach((card)=>{
-        if(projectCards.indexOf(card)<currentIndex+3 && projectCards.indexOf(card)>=currentIndex)
-          card.style.display="block";
+    projects.forEach((project)=>{
+        if(projects.indexOf(project)<currentIndex+3 && projects.indexOf(project)>=currentIndex)
+          project.projectCard.style.display="block";
         else
-          card.style.display="none";
-          if(currentIndex==projectCards.length-1||currentIndex==projectCards.length-2)
+          project.projectCard.style.display="none";
+          if(currentIndex==projects.length-1||currentIndex==projects.length-2)
           {
-            projectCards[projectCards.length-2].style.display="block";
-            projectCards[projectCards.length-3].style.display="block";
+            projects[projects.length-2].style.display="block";
+            projects[projects.length-3].style.display="block";
           }
     })
     console.log(currentIndex);
@@ -252,21 +286,21 @@ nextButton.addEventListener("click", () => {
   prevButton.addEventListener("click", () => {
     currentIndex--;
     if (currentIndex < 0) {
-      currentIndex = projectCards.length - 1;
+      currentIndex = projects.length - 1;
     }
   //   3--  2  2 1 0 2-- 1 0 -1 
     // Show the previous 3 elements
-    projectCards.forEach((card)=>{
+    projects.forEach((project)=>{
        
-        if(projectCards.indexOf(card)>currentIndex-3 && projectCards.indexOf(card)<=currentIndex)
-          card.style.display="block";
+        if(projects.indexOf(project)>currentIndex-3 && projects.indexOf(project)<=currentIndex)
+          project.projectCard.style.display="block";
         else
-          card.style.display="none";
+          project.projectCard.style.display="none";
         // so that there are three elements at any point.
           if(currentIndex==1||currentIndex==0)
           {
-            projectCards[2].style.display="block";
-            projectCards[1].style.display="block";
+            projects[2].style.display="block";
+            projects[1].style.display="block";
           }
              
           console.log(currentIndex)
@@ -276,14 +310,37 @@ nextButton.addEventListener("click", () => {
 
 const updateTasks=(projectTask)=>
 {
-    const allTasks=document.querySelector(".all_tasks");
+   
     allTasks.innerHTML="";
     projectTask.tasks.forEach((task)=>{
-        const taskListItem = document.createElement('li')
-        taskListItem.classList.add("task_list_element");
-        taskListItem.innerHTML=task;
-        allTasks.appendChild(taskListItem);
+        
+        allTasks.appendChild(task);
     })
-    console.log(`updatetask ${projectTask.tasks}`);
+    
     
 }
+
+// TO detect if a task is completed
+// allTasks.addEventListener("click",(event)=>
+// {
+//     if(event.target.classList.contains("task_item_check_regular"))
+//     {
+//         const taskId=event.querySelector(".task_list_element").id;
+//         tasksArray.forEach((task1)=>
+//         {
+//             if(taskId.includes(task1.projectName))
+//             {
+//                 task1.tasks.forEach((task)=>
+//                 {
+
+//                 })
+//             }
+//         })
+//     }
+// })
+
+const projectComp= new project("Duxica","#6F00FF");
+        const firststring="some";
+        const secondstring ="String";
+        const resultstring = firststring+secondstring;
+        console.log(resultstring.includes(firststring));
