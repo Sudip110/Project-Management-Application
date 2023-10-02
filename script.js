@@ -11,7 +11,9 @@ const projectSlider= document.querySelector(".Projects_slider");
 const prevButton = document.querySelector(".prev");
 const nextButton = document.querySelector(".next");
 const submitTask = document.querySelector(".task_submit");
+const taskForm = document.querySelector(".task_form");
 //const taskContainer=document.querySelector(".all_tasks");
+let clickedProjectCard=null;
 let projects=[], tasksArray =[];;
 let prevIndex=0;
 let currentIndex = 0;  
@@ -62,10 +64,35 @@ const toggle=()=>
         {
             this.projectName=projectName;
             this.colorCode=colorCode;
+            //the following array will contain a list of objects of the class taskElement
             this.tasks=[];
             this.status=false;
             this.projectCard=this.createProject(this.projectName,this.colorCode);
             projectSlider.appendChild(this.projectCard);
+
+            this.projectCard.addEventListener("click",(event)=>{
+                clickedProjectCard=this.projectName;
+                if(this.tasks.length!==0 && clickedProjectCard!==this.projectName)
+                    this.updateTasksContainer();
+                if(event.target.classList.contains('task_add'))
+                {
+                    taskForm.style.display="block";
+                }
+            })
+
+            submitTask.addEventListener("click",(event)=>
+            {
+                const taskInputArray = document.querySelectorAll(".task");
+                taskForm.style.display="none";
+                if(taskInputArray.length!==0)
+                {
+                    taskInputArray.forEach((taskInput)=>{
+                        if(taskInput.value!=="")
+                        this.addNewTasksToTasksArray(taskInput.value);
+                    })
+                }
+                this.updateTasksContainer();
+            })
         }
 
         createProject(projectName,colorCode)
@@ -86,11 +113,20 @@ const toggle=()=>
             return customElement;
         }
 
-        addTaskToTaskContainer()
+        updateTasksContainer()
         {
-            
+            const taskContainer = document.querySelector(".all_tasks")
+            taskContainer.innerHTML="";
+            this.tasks.forEach((taskElementObj)=>{
+                taskContainer.appendChild(taskElementObj.task);
+            })
         }
-
+        
+        addNewTasksToTasksArray(taskString)
+        {
+            const task = new taskElement(taskString);
+            this.tasks.push(task);
+        }
         
 
     }
@@ -101,15 +137,12 @@ const toggle=()=>
         {
             this.taskName=taskName;
             this.projectName=projectName;
-            this.task=this.createTask();
-            this.status="incomplete";
-
             //creating the task element
-            this.createTask(this.taskName,this.projectName)
+            this.task=this.createTask();
+            this.status="incomplete";   
         }
-        createTask(taskName, projectName)
+        createTask()
         {
-            const taskContainer = document.querySelector(".all_tasks")
             const task = document.createElement("div");
             task.classList.add("task_list_element");
             const taskDescription = document.createElement("p");
@@ -121,55 +154,38 @@ const toggle=()=>
             task.appendChild(taskDescription);
             task.appendChild(taskTickIconRegular);
             task.appendChild(taskTickIconSolid);
-            taskContainer.appendChild(task);
+            return task;
         }
     }
 
 
-   projectSlider.addEventListener("click",(event)=>{
-        if (event.target.classList.contains('task_add') || event.target.classList.contains('project_project')) {
-            let projectName;
-            if(event.target.classList.contains('task_add'))
-             {
-                const taskForm = document.querySelector(".task_form");
-                currentProjectName=event.target.id;
-                projectName=currentProjectName;
-                taskForm.style.display="block";
+//    projectSlider.addEventListener("click",(event)=>{
+//         if (event.target.classList.contains('task_add') || event.target.classList.contains('project_project')) {
+//             let projectName;
+//             if(event.target.classList.contains('task_add'))
+//              {
+//                 const taskForm = document.querySelector(".task_form");
+//                 currentProjectName=event.target.id;
+//                 projectName=currentProjectName;
+//                 taskForm.style.display="block";
 
-            }
-            else
-            {
-                projectName=event.target.querySelector('.task_add').getAttribute("id");
-                console.log(projectName);
-                tasksArray.forEach((task)=>{
-                    if(task.projectName===projectName)
-                    {
-                       // updateTasks(task);
-                    }
-                    console.log(tasksArray);
-               })
-            }
+//             }
+//             else
+//             {
+//                 projectName=event.target.querySelector('.task_add').getAttribute("id");
+//                 console.log(projectName);
+//                 tasksArray.forEach((task)=>{
+//                     if(task.projectName===projectName)
+//                     {
+//                        // updateTasks(task);
+//                     }
+//                     console.log(tasksArray);
+//                })
+//             }
             
-        }
-  })
+//         }
+//   })
 
-//to take inputs from the task panel
-submitTask.addEventListener("click",(event)=>
-{
-    const taskForm = document.querySelector(".task_form");
-    taskForm.style.display="none";
-    //tasksArray contains a list of all the objects of class ProjectTask
-    allTasks=taskForm.querySelectorAll(".task");
-    console.log(allTasks)
-    allTasks.forEach((task)=>{
-        if(task.value!=="")
-        {
-            console.log("creating a task object");
-            const task1 = new taskElement()
-        }
-    })
-    
-})
 // -------------------------------Incrementing progressbar functionality----------------------
 // const increment_progress_bar=()=>{
 // console.log("clickedMe");
@@ -222,19 +238,7 @@ projectOkButton.addEventListener('click',(e)=>{
         projectAddForm.style.display='none';
         projectAddButton.style.display='block';
         updateProjectSlides(); 
-        // const task = new projectTask(name);
-        // tasksArray.push(task);
-        // console.log(tasksArray);
-        // console.log(task.projectName);
     }
-    // if(projects.length===1)
-    // {
-    //     projectSlider.style.justifyContent="center";
-    // }
-    // else{
-    //     projectSlider.style.justifyContent="left";
-    // }
-    
 })
 
 const updateProjectSlides=()=>
@@ -308,17 +312,17 @@ nextButton.addEventListener("click", () => {
     })
   });
 
-const updateTasks=(projectTask)=>
-{
+// const updateTasks=(projectTask)=>
+// {
    
-    allTasks.innerHTML="";
-    projectTask.tasks.forEach((task)=>{
+//     allTasks.innerHTML="";
+//     projectTask.tasks.forEach((task)=>{
         
-        allTasks.appendChild(task);
-    })
+//         allTasks.appendChild(task);
+//     })
     
     
-}
+// }
 
 // TO detect if a task is completed
 // allTasks.addEventListener("click",(event)=>
