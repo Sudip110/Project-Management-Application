@@ -51,7 +51,7 @@ const displaySignup = () => {
 // Logs the user in when correct user and password are entered
 const login = () => {
   console.log(userName.value);
-  if(userName.value==="Harris0214" && passwored.value === 'HARRIS123')
+  if(userName.value==="JackMartines0214" && passwored.value === '1234560')
   {
     alert('Login successful!');
     window.location.href="index.html";

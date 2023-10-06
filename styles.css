@@ -616,7 +616,7 @@ font-size: 2rem;
     justify-content: left;
     align-items: flex-start;
   }
-  .task_list_element
+  .task_list_element, .no_task_message,.error_message
   {
     list-style: none;
     color:var(--text_primary_colour);

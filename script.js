@@ -12,7 +12,7 @@ const prevButton = document.querySelector(".prev");
 const nextButton = document.querySelector(".next");
 const submitTask = document.querySelector(".task_submit");
 const taskForm = document.querySelector(".task_form");
-//const taskContainer=document.querySelector(".all_tasks");
+const taskContainer=document.querySelector(".all_tasks");
 let clickedProjectCard=null;
 let projects=[], tasksArray =[];;
 let prevIndex=0;
@@ -64,34 +64,57 @@ const toggle=()=>
         {
             this.projectName=projectName;
             this.colorCode=colorCode;
+            this.errorMessage= document.createElement('p');
             //the following array will contain a list of objects of the class taskElement
             this.tasks=[];
             this.status=false;
             this.projectCard=this.createProject(this.projectName,this.colorCode);
             projectSlider.appendChild(this.projectCard);
-
+            
             this.projectCard.addEventListener("click",(event)=>{
                 clickedProjectCard=this.projectName;
-                if(this.tasks.length!==0 && clickedProjectCard!==this.projectName)
-                    this.updateTasksContainer();
+                console.log(`project card clicked ${this.projectName}`)
                 if(event.target.classList.contains('task_add'))
                 {
                     taskForm.style.display="block";
                 }
+                else if(this.tasks.length!==0)
+                    this.updateTasksContainer();
+                else
+                   this.displayNoTasksMessage();
             })
 
             submitTask.addEventListener("click",(event)=>
             {
-                const taskInputArray = document.querySelectorAll(".task");
-                taskForm.style.display="none";
-                if(taskInputArray.length!==0)
+                if(clickedProjectCard===this.projectName)
                 {
-                    taskInputArray.forEach((taskInput)=>{
-                        if(taskInput.value!=="")
-                        this.addNewTasksToTasksArray(taskInput.value);
-                    })
+                    const taskInputArray = document.querySelectorAll(".task");
+                    console.log(taskInputArray.length)
+                          
+                        taskContainer.innerHTML="";
+                        taskInputArray.forEach((taskInput)=>{
+                            if(taskInput.value!=="")
+                        {
+                            console.log(taskInput.value)
+                            this.addNewTasks(taskInput.value);
+                        } 
+                        })
+
+                        if(this.tasks.length===0)
+                        {
+                            this.errorMessage.classList.add("error_message");
+                            this.errorMessage.innerText=`Please Enter atleast one task!`;
+                            this.errorMessage.style.color="red";
+                            submitTask.style.border ="2px solid red";
+                            taskForm.appendChild(this.errorMessage);
+                        }
+                        else
+                             taskForm.style.display="none";
+                    
                 }
-                this.updateTasksContainer();
+                
+                
+               // this.updateTasksContainer();
             })
         }
 
@@ -100,7 +123,7 @@ const toggle=()=>
             const customElement = document.createElement("div");
             customElement.className = "project_card";
             customElement.innerHTML = `
-                <span class="project_name">${projectName}</span>
+                <span class="project_Card_name">${projectName}</span>
                 <p>Progress</p>
                 <span class="project_progress">80</span>
                 <div class="progress_bar" style="background-color:aliceblue;">
@@ -115,17 +138,34 @@ const toggle=()=>
 
         updateTasksContainer()
         {
-            const taskContainer = document.querySelector(".all_tasks")
+            console.log("updatetasks");
+           // const taskContainer = document.querySelector(".all_tasks")
             taskContainer.innerHTML="";
             this.tasks.forEach((taskElementObj)=>{
                 taskContainer.appendChild(taskElementObj.task);
             })
         }
-        
-        addNewTasksToTasksArray(taskString)
+            
+        addNewTasks(taskString)
         {
+            if(taskForm.contains(this.errorMessage))
+                   {
+                        taskForm.removeChild(this.errorMessage);
+                        submitTask.style.border = "";
+                   }
+            
             const task = new taskElement(taskString);
             this.tasks.push(task);
+            console.log(this.tasks);
+        }
+
+        displayNoTasksMessage()
+        {
+            const noTask = document.createElement("p");
+            noTask.classList.add("no_task_message");
+            noTask.innerText = "You do not have any tasks for this project yet!"
+            taskContainer.innerHTML="";
+            taskContainer.appendChild(noTask);
         }
         
 
@@ -133,13 +173,37 @@ const toggle=()=>
 
     class taskElement
     {
-        constructor(taskName,projectName)
+        constructor(taskName)
         {
             this.taskName=taskName;
-            this.projectName=projectName;
+           // this.projectName=projectName;
             //creating the task element
             this.task=this.createTask();
-            this.status="incomplete";   
+            this.status="incomplete"; 
+            taskContainer.appendChild(this.task);
+            //console.log(this.task.querySelectorAll(".task_check"));
+            //console.log(this.task);
+            this.task.querySelectorAll(".task_check").forEach((icon)=>{
+                icon.addEventListener("click",(event)=>{
+                   // console.log(this.taskName);
+                    const taskCheckReular=this.task.querySelector(".task_item_check_regular");
+                    const taskCheckSolid =this.task.querySelector(".task_item_check_solid");
+                   // console.log(taskCheckReular.classList);
+                    //console.log(taskCheckSolid.classList)
+                    if (this.status==="incomplete")
+                      {
+                         this.status="complete";
+                         taskCheckReular.style.display="none";
+                         taskCheckSolid.style.display="inline";
+                      }
+                      else
+                      {
+                         this.status="incomplete";
+                         taskCheckReular.style.display="inline";
+                         taskCheckSolid.style.display="none";
+                      }
+                })
+            })
         }
         createTask()
         {
@@ -148,43 +212,18 @@ const toggle=()=>
             const taskDescription = document.createElement("p");
             taskDescription.textContent=this.taskName;
             const taskTickIconRegular = document.createElement("i");
-            taskTickIconRegular.classList.add('bx','bx-check-circle', 'task_item_check_regular');
+            taskTickIconRegular.classList.add('bx','bx-check-circle', 'task_check','task_item_check_regular');
             const taskTickIconSolid = document.createElement('i');
-            taskTickIconSolid.classList.add('bx','bxs-check-circle', 'task_item_check_solid');
+            taskTickIconSolid.classList.add('bx','bxs-check-circle', 'task_check', 'task_item_check_solid');
+            taskTickIconSolid.style.display="none";
             task.appendChild(taskDescription);
             task.appendChild(taskTickIconRegular);
             task.appendChild(taskTickIconSolid);
             return task;
         }
+
     }
 
-
-//    projectSlider.addEventListener("click",(event)=>{
-//         if (event.target.classList.contains('task_add') || event.target.classList.contains('project_project')) {
-//             let projectName;
-//             if(event.target.classList.contains('task_add'))
-//              {
-//                 const taskForm = document.querySelector(".task_form");
-//                 currentProjectName=event.target.id;
-//                 projectName=currentProjectName;
-//                 taskForm.style.display="block";
-
-//             }
-//             else
-//             {
-//                 projectName=event.target.querySelector('.task_add').getAttribute("id");
-//                 console.log(projectName);
-//                 tasksArray.forEach((task)=>{
-//                     if(task.projectName===projectName)
-//                     {
-//                        // updateTasks(task);
-//                     }
-//                     console.log(tasksArray);
-//                })
-//             }
-            
-//         }
-//   })
 
 // -------------------------------Incrementing progressbar functionality----------------------
 // const increment_progress_bar=()=>{
@@ -217,7 +256,10 @@ projectAddButton.addEventListener('click',(e)=>{
 
 
 projectOkButton.addEventListener('click',(e)=>{
-    const name = document.querySelector(".project_name").value;
+    const nameInput = document.querySelector(".project_name");
+    console.log(nameInput);
+    let name=nameInput.value;
+    console.log(name)
     const ProjectprojectColor =["#8F00FF","#4B0082","#13274F","#6F00FF","#FFA500","#353935"];
     if(name.length===0 || !name.replace(/\s/g, '').length)
     {
@@ -312,39 +354,8 @@ nextButton.addEventListener("click", () => {
     })
   });
 
-// const updateTasks=(projectTask)=>
-// {
-   
-//     allTasks.innerHTML="";
-//     projectTask.tasks.forEach((task)=>{
-        
-//         allTasks.appendChild(task);
-//     })
-    
-    
-// }
 
-// TO detect if a task is completed
-// allTasks.addEventListener("click",(event)=>
-// {
-//     if(event.target.classList.contains("task_item_check_regular"))
-//     {
-//         const taskId=event.querySelector(".task_list_element").id;
-//         tasksArray.forEach((task1)=>
-//         {
-//             if(taskId.includes(task1.projectName))
-//             {
-//                 task1.tasks.forEach((task)=>
-//                 {
 
-//                 })
-//             }
-//         })
-//     }
-// })
-
-const projectComp= new project("Duxica","#6F00FF");
-        const firststring="some";
-        const secondstring ="String";
-        const resultstring = firststring+secondstring;
-        console.log(resultstring.includes(firststring));
+// const task1 = new taskElement("Create WireFrame")
+// const task2 = new taskElement("Create 2nd WireFrame")
+// const task3 = new taskElement("Create 3rd WireFrame")
