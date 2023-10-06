@@ -46,10 +46,10 @@ The "Task and Project Management" page is the core of the application, allowing 
 - Add new projects with the "Add" button.
 - Create tasks within specific projects using the task form.
 
-Please note that features such as team collaboration, sidebar navigation, user profiles, and theme options are still under development.
+Please note that features such as Login, team collaboration, sidebar navigation, user profiles, and theme options are still under development.
 
 ## User Login
-
+Note: The login functionality is not yet operational. For now, the credentials of a test user is hardcoded to simulate ths functionality. These credentials can be found in the login.js file.
 The "User Login" page provides a secure authentication system for users to access their accounts. Here are some features of this page:
 
 ### Account Sign-In
