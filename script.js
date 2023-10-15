@@ -276,82 +276,121 @@ projectOkButton.addEventListener('click',(e)=>{
         const projectprojectColor=ProjectprojectColor[colorIndex];
         const projectComp= new project(name,projectprojectColor);
         projects.push(projectComp);
-        // Hide elements except the first three   
         projectAddForm.style.display='none';
         projectAddButton.style.display='block';
-        updateProjectSlides(); 
+        console.log("updating...");
+        updateProjectSlides("Next"); 
     }
 })
 
-const updateProjectSlides=()=>
+const updateProjectSlides=(operation)=>
 {
     const noOfProjects=projects.length;
+    const allProjects = projectSlider.querySelectorAll(".project_card");
+    console.log(allProjects)
+    //removing all the projectCards
+    allProjects.forEach(projectCard=>projectSlider.removeChild(projectCard));
     console.log(noOfProjects);
+    
+  
     if(noOfProjects>3)
     {
-        projects.forEach((project)=>{
-            if(projects.indexOf(project)==(noOfProjects-3)-1)
-                project.projectCard.style.display="none";
-            prevButton.style.display="block";
-            nextButton.style.display="block";
-        })
+        //TO perform relevant operations based on which button is clicked
+        if(operation==="Next")
+            currentIndex=(currentIndex+1)%noOfProjects;
+        else if(operation=="Prev")
+            currentIndex=(currentIndex-1+noOfProjects)%noOfProjects;
+        
+        for(i = 0;i<3;i++)
+            {
+                const index = (currentIndex+i)%noOfProjects;
+                projectSlider.appendChild(projects[index].projectCard);
+            } 
+        
+        //removing/adding the buttons based on noOfProjects
+        prevButton.style.display="block";
+        nextButton.style.display="block";
     }
     else
-    {
-        projects.forEach(project=>project.projectCard.style.display="block");
+     {
+        console.log("it came here");
+        console.log(projectAddButton.style.display);
         prevButton.style.display="none";
         nextButton.style.display="none";
-    }
+        projects.forEach(project=> projectSlider.appendChild(project.projectCard)); 
+     }
+    
+    
+
+    // if(noOfProjects>3)
+    // {
+    //     projects.forEach((project)=>{
+    //         if(projects.indexOf(project)==(noOfProjects-3)-1)
+    //             project.projectCard.style.display="none";
+    //         prevButton.style.display="block";
+    //         nextButton.style.display="block";
+    //     })
+    //    // projects.forEach(project=>)
+    //     const displayedProjects=projects.filter((project,index)=>index==(noOfProjects-3)-1);
+    // }
+    // else
+    // {
+    //     projects.forEach(project=>project.projectCard.style.display="block");
+    //     prevButton.style.display="none";
+    //     nextButton.style.display="none";
+    // }
 }
 
       
 
 // Next button click event
 nextButton.addEventListener("click", () => {
-    currentIndex++;
-    if (currentIndex >= projects.length) {
-       currentIndex = 0;
-    }
+    updateProjectSlides("Next");
+    // currentIndex++;
+    // if (currentIndex >= projects.length) {
+    //    currentIndex = 0;
+    // }
   
-    // Show the next 3 elements
-    projects.forEach((project)=>{
-        if(projects.indexOf(project)<currentIndex+3 && projects.indexOf(project)>=currentIndex)
-          project.projectCard.style.display="block";
-        else
-          project.projectCard.style.display="none";
-          if(currentIndex==projects.length-1||currentIndex==projects.length-2)
-          {
-            projects[projects.length-2].style.display="block";
-            projects[projects.length-3].style.display="block";
-          }
-    })
-    console.log(currentIndex);
+    // // Show the next 3 elements
+    // projects.forEach((project)=>{
+    //     if(projects.indexOf(project)<currentIndex+3 && projects.indexOf(project)>=currentIndex)
+    //       project.projectCard.style.display="block";
+    //     else
+    //       project.projectCard.style.display="none";
+    //       if(currentIndex==projects.length-1||currentIndex==projects.length-2)
+    //       {
+    //         projects[projects.length-2].style.display="block";
+    //         projects[projects.length-3].style.display="block";
+    //       }
+    // })
+    // console.log(currentIndex);
   });
   
   // Previous button click event
   prevButton.addEventListener("click", () => {
-    currentIndex--;
-    if (currentIndex < 0) {
-      currentIndex = projects.length - 1;
-    }
-  //   3--  2  2 1 0 2-- 1 0 -1 
-    // Show the previous 3 elements
-    projects.forEach((project)=>{
+    updateProjectSlides("Prev");
+//     currentIndex--;
+//     if (currentIndex < 0) {
+//       currentIndex = projects.length - 1;
+//     }
+//   //   3--  2  2 1 0 2-- 1 0 -1 
+//     // Show the previous 3 elements
+//     projects.forEach((project)=>{
        
-        if(projects.indexOf(project)>currentIndex-3 && projects.indexOf(project)<=currentIndex)
-          project.projectCard.style.display="block";
-        else
-          project.projectCard.style.display="none";
-        // so that there are three elements at any point.
-          if(currentIndex==1||currentIndex==0)
-          {
-            projects[2].style.display="block";
-            projects[1].style.display="block";
-          }
+//         if(projects.indexOf(project)>currentIndex-3 && projects.indexOf(project)<=currentIndex)
+//           project.projectCard.style.display="block";
+//         else
+//           project.projectCard.style.display="none";
+//         // so that there are three elements at any point.
+//           if(currentIndex==1||currentIndex==0)
+//           {
+//             projects[2].style.display="block";
+//             projects[1].style.display="block";
+//           }
              
-          console.log(currentIndex)
+//           console.log(currentIndex)
              
-    })
+//     })
   });
 
 
