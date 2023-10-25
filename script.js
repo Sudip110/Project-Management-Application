@@ -73,7 +73,7 @@ const toggle=()=>
             
             this.projectCard.addEventListener("click",(event)=>{
                 clickedProjectCard=this.projectName;
-                console.log(`project card clicked ${this.projectName}`)
+                console.log(event.target.classList.contains('task_add'))
                 if(event.target.classList.contains('task_add'))
                 {
                     taskForm.style.display="block";
@@ -125,9 +125,9 @@ const toggle=()=>
             customElement.innerHTML = `
                 <span class="project_Card_name">${projectName}</span>
                 <p>Progress</p>
-                <span class="project_progress">80</span>
+                <span class="project_progress"></span>
                 <div class="progress_bar" style="background-color:aliceblue;">
-                <div id="bar" style="height:24px;width:1%;background-color: red;"></div>
+                <div id="bar" style="height:24px;width:0%;"></div>
                 </div>
                 <i class='bx bx-plus-circle task_add' id=${projectName}></i>
                 
@@ -154,7 +154,7 @@ const toggle=()=>
                         submitTask.style.border = "";
                    }
             
-            const task = new taskElement(taskString);
+            const task = new taskElement(taskString,this);
             this.tasks.push(task);
             console.log(this.tasks);
         }
@@ -173,8 +173,10 @@ const toggle=()=>
 
     class taskElement
     {
-        constructor(taskName)
+        constructor(taskName,project)
         {
+            this.project=project;
+            console.log(this.project);
             this.taskName=taskName;
            // this.projectName=projectName;
             //creating the task element
@@ -201,7 +203,9 @@ const toggle=()=>
                          this.status="incomplete";
                          taskCheckReular.style.display="inline";
                          taskCheckSolid.style.display="none";
+                         
                       }
+                      this.updateProgressBar()
                 })
             })
         }
@@ -220,6 +224,17 @@ const toggle=()=>
             task.appendChild(taskTickIconRegular);
             task.appendChild(taskTickIconSolid);
             return task;
+        }
+
+        updateProgressBar()
+        {
+            const numberOfTasks = this.project.tasks.length;
+            const numberOfTasksCompleted = this.project.tasks.filter((task)=>task.status==="complete").length;
+            const completedTaskspercent = Math.floor((numberOfTasksCompleted/numberOfTasks)*100);
+            const progressBar = this.project.projectCard.querySelector("#bar");
+            this.project.projectCard.querySelector(".project_progress").innerText=`${completedTaskspercent}%`;
+            progressBar.style.width=`${completedTaskspercent}%`;
+            console.log(completedTaskspercent);
         }
 
     }
@@ -308,6 +323,7 @@ const updateProjectSlides=(operation)=>
             } 
         
         //removing/adding the buttons based on noOfProjects
+        console.log("Hereeeee");
         prevButton.style.display="block";
         nextButton.style.display="block";
     }
@@ -319,26 +335,6 @@ const updateProjectSlides=(operation)=>
         nextButton.style.display="none";
         projects.forEach(project=> projectSlider.appendChild(project.projectCard)); 
      }
-    
-    
-
-    // if(noOfProjects>3)
-    // {
-    //     projects.forEach((project)=>{
-    //         if(projects.indexOf(project)==(noOfProjects-3)-1)
-    //             project.projectCard.style.display="none";
-    //         prevButton.style.display="block";
-    //         nextButton.style.display="block";
-    //     })
-    //    // projects.forEach(project=>)
-    //     const displayedProjects=projects.filter((project,index)=>index==(noOfProjects-3)-1);
-    // }
-    // else
-    // {
-    //     projects.forEach(project=>project.projectCard.style.display="block");
-    //     prevButton.style.display="none";
-    //     nextButton.style.display="none";
-    // }
 }
 
       
@@ -346,55 +342,21 @@ const updateProjectSlides=(operation)=>
 // Next button click event
 nextButton.addEventListener("click", () => {
     updateProjectSlides("Next");
-    // currentIndex++;
-    // if (currentIndex >= projects.length) {
-    //    currentIndex = 0;
-    // }
-  
-    // // Show the next 3 elements
-    // projects.forEach((project)=>{
-    //     if(projects.indexOf(project)<currentIndex+3 && projects.indexOf(project)>=currentIndex)
-    //       project.projectCard.style.display="block";
-    //     else
-    //       project.projectCard.style.display="none";
-    //       if(currentIndex==projects.length-1||currentIndex==projects.length-2)
-    //       {
-    //         projects[projects.length-2].style.display="block";
-    //         projects[projects.length-3].style.display="block";
-    //       }
-    // })
-    // console.log(currentIndex);
   });
   
   // Previous button click event
   prevButton.addEventListener("click", () => {
     updateProjectSlides("Prev");
-//     currentIndex--;
-//     if (currentIndex < 0) {
-//       currentIndex = projects.length - 1;
-//     }
-//   //   3--  2  2 1 0 2-- 1 0 -1 
-//     // Show the previous 3 elements
-//     projects.forEach((project)=>{
-       
-//         if(projects.indexOf(project)>currentIndex-3 && projects.indexOf(project)<=currentIndex)
-//           project.projectCard.style.display="block";
-//         else
-//           project.projectCard.style.display="none";
-//         // so that there are three elements at any point.
-//           if(currentIndex==1||currentIndex==0)
-//           {
-//             projects[2].style.display="block";
-//             projects[1].style.display="block";
-//           }
-             
-//           console.log(currentIndex)
-             
-//     })
+
   });
 
 
-
+//   const projectComp= new project("Pj1","#13274F");
+//   projects.push(projectComp);
+//   const projectComp1= new project("Pj2","#13274F");
+//   projects.push(projectComp1);
+//   const projectComp2= new project("Pj3","#13274F");
+//   projects.push(projectComp2);
 // const task1 = new taskElement("Create WireFrame")
 // const task2 = new taskElement("Create 2nd WireFrame")
 // const task3 = new taskElement("Create 3rd WireFrame")

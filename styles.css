@@ -578,6 +578,7 @@ font-size: 2rem;
     border-radius: 1.5rem;
     padding: 1.5rem;
     position: absolute;
+    z-index: 2;
     display: none;
   }
   .task,.task_submit
@@ -649,4 +650,15 @@ font-size: 2rem;
   {
     cursor: pointer;
     color: #0096c7;
+  }
+ .progress_bar
+ {
+    border-radius: 0.25rem;
+ }
+  #bar
+  {
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+    background: linear-gradient(to right, #a1dff7,#0065f0);
+    transition: all 0.5s;
   }
