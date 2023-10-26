@@ -110,7 +110,7 @@ const toggle=()=>
                         }
                         else
                              taskForm.style.display="none";
-                    
+                    this.updateTasksContainer();  
                 }
                 
                 
@@ -182,7 +182,7 @@ const toggle=()=>
             //creating the task element
             this.task=this.createTask();
             this.status="incomplete"; 
-            taskContainer.appendChild(this.task);
+           // taskContainer.appendChild(this.task);
             //console.log(this.task.querySelectorAll(".task_check"));
             //console.log(this.task);
             this.task.querySelectorAll(".task_check").forEach((icon)=>{
