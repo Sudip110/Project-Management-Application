@@ -1,3 +1,4 @@
+
 //--------------------------------- Global variables--------------------------------------------------------------------- 
 let sidebar_left_toggle = document.querySelector("#menu");
 let siderbar_left_open = false;
@@ -21,6 +22,12 @@ let currentProjectName="";
 
 //--------------------------------- Global variables--------------------------------------------------------------------- 
 
+document.addEventListener('DOMContentLoaded', function () {
+    // Find the taskContainer element and initialize Simplebar
+    console.log("initializing simplebar");
+    const taskContainer = document.querySelector('.all_tasks');
+    new SimpleBar(taskContainer);
+  });
 // -----------------------------Expand and collapse functionality in the menu slider------------------------------------
 const toggle=()=>
 {
@@ -111,6 +118,11 @@ const toggle=()=>
                         else
                              taskForm.style.display="none";
                     this.updateTasksContainer();  
+                    // if(this.tasks.length >10)
+                    //     taskContainer.style.overflowY = "scroll";
+                    // else
+                    // taskContainer.style.overflowY = "none";
+                    
                 }
                 
                 
@@ -350,6 +362,23 @@ nextButton.addEventListener("click", () => {
 
   });
 
+// updating the date and day
+
+const updateDateAndDay = () =>
+{
+    const daysOfWeek =["Sunday","Monday","Tuesday","Wednesday","Thursady","Friday","Saturday"];
+    const date = document.querySelector(".dateNo");
+    const day = document.querySelector(".day");
+    const currentDate = new Date();
+    const dayIndex = currentDate.getDay();
+    const currentDay = daysOfWeek[dayIndex];
+    const displayDate=currentDate.toLocaleDateString();
+    day.innerText=currentDay;
+    date.innerText=displayDate;
+}
+
+updateDateAndDay();
+setInterval(()=>updateDateAndDay(),1000);//to update date and day every second 
 
 //   const projectComp= new project("Pj1","#13274F");
 //   projects.push(projectComp);
