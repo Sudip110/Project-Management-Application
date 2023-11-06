@@ -277,6 +277,7 @@ sidebar_left_toggle.addEventListener("click",(e)=>{
 
 projectAddButton.addEventListener('click',(e)=>{
    
+    document.querySelector(".project_name").style.color="#6c757d";
     projectAddForm.style.display='block';
     projectAddButton.style.display='none';
 })
