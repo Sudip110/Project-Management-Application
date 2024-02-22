@@ -104,3 +104,6 @@ Contributions to the "To Do App" are welcome! If you'd like to contribute, pleas
 ## License
 
 This project currently does not have a specific license.
+
+## Link to the application
+https://manager-e2535f.netlify.app
